@@ -1,0 +1,32 @@
+---
+layout: default
+---
+<div class="main">
+
+  <h1 class="title">{{ page.title | escape }}</h1>
+
+  <div class="content">
+    {{ content }}
+  </div>
+
+  {%- if site.posts.size > 0 -%}
+    <div id="aiguilles">
+      {%- for post in site.posts -%}
+        {% assign postid = post.url | split: '/' | last | split: '.' | first %}
+        <a class="aiguille" target="{{ postid }}" onclick="toggle(this)" href="#{{ postid }}">
+          {{ post.title | escape }}
+        </a>
+      {%- endfor -%}
+    </div>
+    <div id="bottes">
+      {%- for post in site.posts -%}
+        {% assign postid = post.url | split: '/' | last | split: '.' | first %}
+        <div class="botte" id="{{ postid }}">
+          {{ post.content }}
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+</div>
+
