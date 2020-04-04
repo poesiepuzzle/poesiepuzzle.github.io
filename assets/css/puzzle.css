@@ -1,0 +1,62 @@
+* {
+    /*
+    font-family: Tahoma, Geneva, sans-serif;
+    */
+    box-sizing: border-box;
+}
+
+body {
+    /*
+    overflow: scroll;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100vw;
+    height: 100vh;
+    */
+    margin: 0;
+}
+
+#ecran {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+}
+
+#aiguilles {
+    margin: 1em;
+}
+.aiguille {
+    /*
+    transition-duration: 1s, 1s;
+    transition-timing-function: linear, linear;
+    */
+    position: relative;
+    top: 0;
+    left: 0;
+    transition-property: top, left;
+    transition-duration: 1s, 0.2s;
+}
+.aiguille.clicked {
+    z-index: 1;
+    transition-delay: 0s, 0.8s;
+}
+
+#bottes {
+    /*
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    */
+}
+.botte {
+    display: none;
+    padding: 2em;
+    opacity: 0;
+    transition: display 0s, opacity 0.9s;
+}
+
