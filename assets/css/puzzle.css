@@ -18,10 +18,39 @@ body {
 }
 
 
-.wordcount-0 {
-    color: red;
+.aiguille.wordcount-0 {
+    font-size: 0.5em;
 }    
-
+.aiguille.wordcount-1 {
+    font-size: 0.7em;
+}
+.aiguille.wordcount-2 {
+    font-size: 0.9em;
+}
+.aiguille.wordcount-3 {
+    font-size: 1.1em;
+}
+.aiguille.wordcount-4 {
+    font-size: 1.4em;
+}
+.aiguille.wordcount-5 {
+    font-size: 1.7em;
+}
+.aiguille.wordcount-6 {
+    font-size: 2.3em;
+}
+.aiguille.wordcount-7 {
+    font-size: 3em;
+}
+.aiguille.wordcount-8 {
+    font-size: 5em;
+}
+.aiguille.wordcount-9 {
+    font-size: 7em;
+}
+.aiguille.wordcount-10 {
+    font-size: 10em;
+}
 
 
 
