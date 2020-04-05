@@ -27,7 +27,7 @@ layout: default
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
 
         <div class="botte" id="{{ postid }}">
-          {{ post.content }}
+          {{ post }}
         </div>
       {%- endfor -%}
     </div>
