@@ -1,7 +1,14 @@
+@font-face {
+    font-family: 'PetitFormalScriptRegular';
+    src: url('https://fontlibrary.org/assets/fonts/petit-formal-script/8eefef575bc628275f0c8b73767cc67f/7e13fe25a31ac5d5454e916c05cdc025/PetitFormalScriptRegular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 * {
     /*
     font-family: Tahoma, Geneva, sans-serif;
     */
+    font-family: 'PetitFormalScriptRegular';
     box-sizing: border-box;
 }
 
