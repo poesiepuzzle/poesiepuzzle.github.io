@@ -17,6 +17,19 @@ body {
     margin: 0;
 }
 
+
+.wordcount-0 {
+    color: red;
+}    
+
+
+
+
+
+
+
+
+
 #ecran {
     position: absolute;
     top: 0;
@@ -39,6 +52,7 @@ body {
     left: 0;
     transition-property: top, left;
     transition-duration: 1s, 0.2s;
+    color: orange;
 }
 .aiguille.clicked {
     z-index: 1;
