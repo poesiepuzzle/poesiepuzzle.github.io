@@ -8,14 +8,16 @@ layout: default
   -->
 
   <div class="content">
-    {{ content }}
+    {{ page.content }}
   </div>
 
   {%- if site.posts.size > 0 -%}
     <div id="aiguilles">
       {%- for post in site.posts -%}
+        {% assign wc = post.content.size | divided_by: 100 %}
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
-        <a class="aiguille" target="{{ postid }}" onclick="toggle(this)" href="#{{ postid }}">
+
+        <a class="aiguille wordcount-{{ wc }}" target="{{ postid }}" onclick="toggle(this)" href="#{{ postid }}">
           {{ post.title | escape }}
         </a>
       {%- endfor -%}
@@ -23,6 +25,7 @@ layout: default
     <div id="bottes">
       {%- for post in site.posts -%}
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
+
         <div class="botte" id="{{ postid }}">
           {{ post.content }}
         </div>
