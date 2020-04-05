@@ -8,7 +8,7 @@ layout: default
   -->
 
   <div class="content">
-    {{ page.content }}
+    {{ page.content | markdownify }}
   </div>
 
   {%- if site.posts.size > 0 -%}
@@ -27,7 +27,7 @@ layout: default
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
 
         <div class="botte" id="{{ postid }}">
-          {{ post }}
+          {{ post.content }}
         </div>
       {%- endfor -%}
     </div>
