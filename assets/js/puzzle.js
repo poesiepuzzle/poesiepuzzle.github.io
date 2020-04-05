@@ -41,9 +41,11 @@ function hide(mot) {
     }
 
     if(article != null) {
+        // D'abord déclencher le fondu en opacité, puis cacher :
         article.addEventListener('transitionend', hide_article);
         article.style.opacity = 0;
     }
+    // D'abord déclencher l'animation du mouvement, puis déclasser :
     mot.addEventListener('transitionend', unclick_mot);
     mot.style.top = "0px";
     mot.style.left = "0px";
@@ -54,7 +56,7 @@ function show(mot) {
     var article = document.getElementById(mot.target);
     article.style.display = "block";
     var keyword = mot.textContent.trim();
-    var texte = article.textContent;
+    var texte = article.innerHTML;
     var texteFinal = '';
 
     // Remplacer l'occurence de keyword dans texte par un span avec id
