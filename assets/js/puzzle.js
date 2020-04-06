@@ -85,6 +85,11 @@ function show(mot) {
     motdanstexte = document.getElementById("mot" + mot.target);
     console.log('motdanstexte :');
     console.log(motdanstexte);
+    motdanstexte.classList.add('aiguille');
+    //motdanstexte.classList.add(mot.classList.keys());
+    if(mot.className.search("wordcount")) {
+        motdanstexte.classList.add(mot.className.slice(mot.className.search("wordcount")).split(' ')[0]);
+    }
     //motdanstexte.style.visibility = 'hidden';
     motdanstexte.style.opacity = 0;
     mot.style.top = String(+motdanstexte.offsetTop - mot.offsetTop) + "px";
