@@ -18,7 +18,7 @@ body {
 }
 
 .main {
-    max-width: 25em;
+    max-width: 35em;
     margin: auto;
 }
 p {
@@ -27,7 +27,7 @@ p {
 
 .image-portfolio {
     width: 100%;
-    max-width: 25em;
+    max-width: 35em;
 }
 
 
