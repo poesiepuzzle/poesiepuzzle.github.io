@@ -19,6 +19,7 @@ body {
 
 .image-portfolio {
     width: 100%;
+    max-width: 60em;
 }
 
 
@@ -26,7 +27,7 @@ body {
 
 .aiguille.wordcount-0 {
     font-size: 0.5em;
-}    
+}
 .aiguille.wordcount-1 {
     font-size: 0.7em;
 }
@@ -108,4 +109,3 @@ body {
     opacity: 0;
     transition: display 0s, opacity 0.9s;
 }
-
