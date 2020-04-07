@@ -19,20 +19,18 @@ donner une forme arbitraire (y compris svg) qui contient le paragraphe _qui
 suit_.
 
 <style>
-.ciel {
-}
-.nuage {
+.nuage.demo {
     width: 50%;
     height: 190px;
     background-repeat: no-repeat;
 }
-.nuage.gauche {
+.nuage.demo.gauche {
     float: left;
     background-image: url(/images/nuage_gauche.svg);
     shape-outside: url(/images/nuage_gauche.svg);
     clip-path: url(/images/nuage_gauche.svg);
  }
-.nuage.droit {
+.nuage.demo.droit {
     float: right;
     background-image: url(/images/nuage_droit.svg);
     background-position: right;
@@ -41,9 +39,9 @@ suit_.
  }
 </style>
 
-<div class="ciel">
-  <span class="nuage gauche"></span>
-  <span class="nuage droit"></span>
+<div>
+  <span class="demo nuage gauche"></span>
+  <span class="demo nuage droit"></span>
   <p>
     C'est juste un mot comme ça, f_agilistique ça veut rien dire au fond, tout
     ça c'est juste des mots pour remplir des paragraphe qui n'ont d'utilité

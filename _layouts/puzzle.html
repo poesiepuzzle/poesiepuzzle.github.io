@@ -3,7 +3,7 @@ layout: default
 ---
 <div class="main">
 
-  <!--
+  <!-- page.content already contains the title.
   <h1 class="title">{{ page.title | escape }}</h1>
   -->
 
@@ -12,16 +12,44 @@ layout: default
   </div>
 
   {%- if site.posts.size > 0 -%}
-    <div id="aiguilles">
+
+    <!-- Post cloud -->
+
+    <style>
+    .nuage {
+        width: 50%;
+        height: 190px;
+        background-repeat: no-repeat;
+    }
+    .nuage.gauche {
+        float: left;
+        shape-outside: url(/images/nuage_gauche.svg);
+        clip-path: url(/images/nuage_gauche.svg);
+     }
+    .nuage.droit {
+        float: right;
+        shape-outside: url(/images/nuage_droit.svg);
+        clip-path: url(/images/nuage_droit.svg);
+     }
+    </style>
+
+    <div id="trousseau">
+      <span class="nuage gauche"></span>
+      <span class="nuage droit"></span>
       {%- for post in site.posts -%}
         {% assign wc = post.content.size | divided_by: 100 %}
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
-
-        <a class="aiguille wordcount-{{ wc }}" target="{{ postid }}" onclick="toggle(this)" href="#{{ postid }}">
+        <a    target="{{ postid }}"
+              href="#{{ postid }}"
+              class="aiguille wordcount-{{ wc }}"
+              onclick="toggle(this)">
           {{ post.title | escape }}
         </a>
       {%- endfor -%}
     </div>
+
+    <!-- Posts contents -->
+
     <div id="bottes">
       {%- for post in site.posts -%}
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
@@ -31,7 +59,7 @@ layout: default
         </div>
       {%- endfor -%}
     </div>
-  {%- endif -%}
 
+  {%- endif -%}
 </div>
 
