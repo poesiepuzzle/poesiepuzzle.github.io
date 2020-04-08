@@ -1,8 +1,7 @@
 ---
+title: poésie\puzzle
 layout: puzzle
 ---
-
-# poésie\puzzle
 
 Site de la Fleur & Gioia
 

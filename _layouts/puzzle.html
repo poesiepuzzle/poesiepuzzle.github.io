@@ -3,9 +3,9 @@ layout: default
 ---
 <div class="main">
 
-  <!-- page.content already contains the title.
-  <h1 class="title">{{ page.title | escape }}</h1>
-  -->
+  <a href="/">
+    <h1 class="title">{{ page.title | escape }}</h1>
+  </a>
 
   <div class="content">
     {{ page.content | markdownify }}
