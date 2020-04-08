@@ -21,7 +21,7 @@ comme çi-dessous.
 La solution qui fonctionne : l'option css `shape-outside`. Elle permet de
 donner une forme arbitraire (y compris SVG) qui contient le paragraphe _qui 
 suit_. Cette forme doit flotter à gauche où à droite, qui est le côté où elle
-empêchera le texte d'aller.
+empêchera le texte d'aller. C'est un petit Nuage.
 
 <style>
 .nuage.demo {

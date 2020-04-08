@@ -1,99 +1,123 @@
 function toggle(mot) {
-    //var article = document.querySelector("#" + mot.target);
-    var article = document.getElementById(mot.target);
+    var id_aiguille = mot.href.split('#')[1];
+    var article = document.getElementById("article-" + id_aiguille);
+    var ecran = document.getElementById("ecran");
 
     event.preventDefault();
-    console.log('article :');
-    console.log(article);
+    // TODO Acter le changement d'url ?
+
+    console.log('id présenté : ' + id_aiguille);
 
     function show_mot() {
-        // event.target est le mot, event.target.target est l'article :
         event.target.removeEventListener('transitionend', show_mot);
-        show(mot);
+        console.log("ouverture du mot " + mot.id);
+        montrer(mot);
     }
 
-    // Si le mot est clickable, fermer l'éventuel mot clicked, puis ouvrir :
-    if(! mot.classList.contains('clicked')) {
-        if(mot_ouvert = document.querySelector('.clicked')) {
-            //article_ouvert = document.getElementById(mot_ouvert.target);
-            mot_ouvert.addEventListener('transitionend', show_mot);
-            hide(mot_ouvert);
+    // Si un mot est ouvert dans ecran, fermer le mot actif, puis ouvrir mot :
+    if(mot_ouvert = document.getElementById('mot_ouvert')) {
+        id_ouverte = mot_ouvert.id.split('-')[1];
+        let article_ouvert = document.getElementById("article-" + id_ouverte);
+        console.log("id ouverte : " + id_ouverte);
+        if(mot_ouvert == mot) {
+            // Ne devrait pas arriver, le lien est dans ecran, qui est en-dessous.
+            console.log(mot.id + " était déjà ouvert, fermeture");
+            cacher(mot);
         } else {
-            show(mot);
+            mot_ouvert.addEventListener('transitionend', show_mot);
+            cacher(mot_ouvert);
         }
     } else {
-        hide(mot);
+        montrer(mot);
     }
 }
 
-function hide(mot) {
-    //var article = document.querySelector("#" + mot.target);
-    var article = document.getElementById(mot.target);
+function cacher(mot) {
+    var trousseau = document.getElementById("mots");
+    var id_aiguille = mot.href.split('#')[1];
+    var article = document.getElementById("article-" + id_aiguille);
 
+    console.log("fermeture du mot : " + mot.id);
     function hide_article() {
         event.target.removeEventListener('transitionend', hide_article);
         //article.style.visibility = "hidden";
         article.style.display = "none";
     }
-    function unclick_mot() {
-        event.target.removeEventListener('transitionend', unclick_mot);
-        mot.classList.remove('clicked');
+    function put_mot_back() {
+        event.target.removeEventListener('transitionend', put_mot_back);
+        //trousseau.appendChild(mot);
+        mot.style.position = 'static';
+        mot.style.left = "";
+        mot.style.top = "";
+        mot.id = "mot-" + id_aiguille;
     }
 
     if(article != null) {
         // D'abord déclencher le fondu en opacité, puis cacher :
         article.addEventListener('transitionend', hide_article);
+        console.log("fermeture de l'article " + article.id);
         article.style.opacity = 0;
+    } else {
+        console.log("! toggle ferme l'article " + id_aiguille + " mais il est déjà fermé");
     }
-    // D'abord déclencher l'animation du mouvement, puis déclasser :
-    mot.addEventListener('transitionend', unclick_mot);
-    mot.style.top = "0px";
-    mot.style.left = "0px";
+    mot.addEventListener('transitionend', put_mot_back);
+    mot.style.left = String(trousseau.offsetLeft) + "px";
+    mot.style.top = String(trousseau.offsetTop) + "px";
+
+    console.log("fermeture de l'id " + id_aiguille);
 }
 
-function show(mot) {
-    //var article = document.querySelector(mot.target);
-    var article = document.getElementById(mot.target);
+function montrer(mot) {
+    var id_aiguille = mot.href.split('#')[1];
+    var article = document.getElementById("article-" + id_aiguille);
+    var ecran = document.getElementById("ecran");
     article.style.display = "block";
     var keyword = mot.textContent.trim();
     var texte = article.innerHTML;
     var texteFinal = '';
 
-    // Remplacer l'occurence de keyword dans texte par un span avec id
-    // TODO ne faire qu'une fois
-    // TODO faire en php
+    // Si elle n'existe pas encore, copier l'aiguille du trousseau dans la article.
+    // TODO faire en php ou liquid ?
+    if(! document.getElementById(id_aiguille)) {
+        console.log("injection de l'aiguille");
+        let tampon = texte.split(keyword);
 
-    tampon = texte.split(keyword);
-    texteFinal += tampon[0];
-    texteFinal += '<span class="mot" id="mot' + mot.target + '">' + keyword + '</span>';
-    texteFinal += tampon.slice(1).join(keyword);
+        texteFinal += tampon[0];
+        texteFinal += '<span class="aiguille" id="' + id_aiguille + '">' + keyword + '</span>';
+        texteFinal += tampon.slice(1).join(keyword);
 
-    // Réinjection du html
+        // Réinjection du html :
+        article.innerHTML = texteFinal;
+    }
 
-    article.innerHTML = texteFinal;
-
-    // Placer le mot en positionnement absolu
-
-    //mot.style.top = mot.offsetTop;
-    //mot.style.left = mot.offsetLeft;
-    //mot.style.position = 'absolute';
-    //offset_abs = mot.offset();
+    //window.setTimeout(20);
+    let aiguille = document.getElementById(id_aiguille);
 
     // Déplacer le mot jusqu'à sa position dans le texte
+    // Placer le mot en positionnement absolu
+    // TODO rapporter quand on referme.
 
-    //motdanstexte = document.querySelector("#mot" + mot.target);
-    motdanstexte = document.getElementById("mot" + mot.target);
-    console.log('motdanstexte :');
-    console.log(motdanstexte);
-    motdanstexte.classList.add('aiguille');
-    //motdanstexte.classList.add(mot.classList.keys());
+    initialLeft = mot.offsetLeft;
+    initialTop = mot.offsetTop;
+    console.log('coordonnées mot : ', initialLeft, initialTop);
+    console.log('coordonnées aiguille : ', aiguille.offsetLeft, aiguille.offsetTop);
+
+    mot.style.position = 'absolute';
+    mot.style.left = String(initialLeft) + "px";
+    mot.style.top = String(initialTop) + "px";
+    //mot.style.left = 0;
+    //mot.style.top = 0;
+
+    console.log("déplacement vers : ", aiguille.offsetLeft, aiguille.offsetTop);
+    mot.style.left = String(aiguille.offsetLeft) + "px";
+    mot.style.top = String(aiguille.offsetTop) + "px";
+    //console.log("déplacement vers : ", aiguille.offsetLeft - initialLeft, aiguille.offsetTop - initialTop);
+    //mot.style.left = String(aiguille.offsetLeft - initialLeft) + "px";
+    //mot.style.top = String(aiguille.offsetTop - initialTop) + "px";
+
     if(mot.className.search("wordcount")) {
-        motdanstexte.classList.add(mot.className.slice(mot.className.search("wordcount")).split(' ')[0]);
+        aiguille.classList.add(mot.className.slice(mot.className.search("wordcount")).split(' ')[0]);
     }
-    //motdanstexte.style.visibility = 'hidden';
-    motdanstexte.style.opacity = 0;
-    mot.style.top = String(+motdanstexte.offsetTop - mot.offsetTop) + "px";
-    mot.style.left = String(+motdanstexte.offsetLeft - mot.offsetLeft) + "px";
 
     function rearmer_mot() {
         // event.target est le mot, event.target.target est l'article :
@@ -101,8 +125,12 @@ function show(mot) {
         //article.css('visibility', 'visible');
 
         event.target.removeEventListener('transitionend', rearmer_mot);
-        //article.addEventListener('transitionend', changeClass);
-        event.target.classList.add('clicked');
+        // Attendre que le changement de `display` sur l'article se tasse :
+        window.setTimeout(20);
+        //event.target.classList.add('active');
+
+        //ecran.appendChild(mot);
+        mot.id = "mot_ouvert";
     }
     mot.addEventListener('transitionend', rearmer_mot);
     article.style.display = "block";

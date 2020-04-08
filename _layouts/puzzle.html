@@ -7,6 +7,8 @@ layout: default
     <h1 class="title">{{ page.title | escape }}</h1>
   </a>
 
+  <div id="ecran"></div>
+
   <div class="content">
     {{ page.content | markdownify }}
   </div>
@@ -33,15 +35,15 @@ layout: default
      }
     </style>
 
-    <div id="trousseau">
+    <div id="mots">
       <span class="nuage gauche"></span>
       <span class="nuage droit"></span>
       {%- for post in site.posts -%}
         {% assign wc = post.content.size | divided_by: 100 %}
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
-        <a    target="{{ postid }}"
+        <a    id="mot-{{ postid }}"
               href="#{{ postid }}"
-              class="aiguille wordcount-{{ wc }}"
+              class="mot wordcount-{{ wc }}"
               onclick="toggle(this)">
           {{ post.title | escape }}
         </a>
@@ -50,11 +52,11 @@ layout: default
 
     <!-- Posts contents -->
 
-    <div id="bottes">
+    <div id="articles">
       {%- for post in site.posts -%}
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
 
-        <div class="botte" id="{{ postid }}">
+        <div class="article" id="article-{{ postid }}">
           {{ post.content }}
         </div>
       {%- endfor -%}
