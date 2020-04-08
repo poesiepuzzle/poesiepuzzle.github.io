@@ -4,6 +4,9 @@
     */
     box-sizing: border-box;
 }
+a {
+    color: orange;
+}
 
 body {
     /*
@@ -95,7 +98,6 @@ p {
     left: 0;
     transition-property: top, left;
     transition-duration: 1s, 0.2s;
-    color: orange;
 }
 .aiguille.clicked {
     z-index: 1;
