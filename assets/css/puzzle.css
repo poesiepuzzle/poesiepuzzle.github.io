@@ -17,9 +17,17 @@ body {
     margin: 0;
 }
 
+.main {
+    max-width: 25em;
+    margin: auto;
+}
+p {
+    text-align: justify;
+}
+
 .image-portfolio {
     width: 100%;
-    max-width: 60em;
+    max-width: 25em;
 }
 
 

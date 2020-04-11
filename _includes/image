@@ -1,0 +1,2 @@
+<img src="{{ include.file }}" alt="{{ include.file }}" class="image-portfolio" />
+
