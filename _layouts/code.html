@@ -1,0 +1,43 @@
+---
+layout: default
+---
+<style>
+.wrapper {
+  width: 90vw;
+  max-width: 40em;
+  margin: auto;
+  margin-top margin-bottom: 1em;
+}
+.preView {
+  border: 1px solid black;
+}
+pre.highlight {
+  border: 1px solid grey;
+}
+</style>
+<script>
+  window.onload = function show_samples() {
+    let samples = document.querySelectorAll('pre.highlight');
+    for(i=0; i < samples.length; i++) {
+      let sample = samples[i];
+      let post = document.createElement('div');
+
+      post.innerHTML = sample.innerText;
+      post.classList.add("preView");
+      sample.parentElement.insertBefore(post, sample.nextSibling);
+    }
+  }
+</script>
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title | escape }}</h1>
+  </header>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+</article>
+

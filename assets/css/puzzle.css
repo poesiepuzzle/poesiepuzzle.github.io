@@ -1,13 +1,3 @@
-* {
-    /*
-    font-family: Tahoma, Geneva, sans-serif;
-    */
-    box-sizing: border-box;
-}
-a {
-    color: orange;
-}
-
 body {
     /*
     overflow: scroll;
@@ -19,10 +9,31 @@ body {
     */
     margin: 0;
 }
-
-.main {
+#banner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
     max-width: 35em;
     margin: auto;
+}
+#nav {
+    text-align: center;
+}
+main {
+    max-width: 35em;
+    margin: auto;
+}
+
+
+* {
+    /*
+    font-family: Tahoma, Geneva, sans-serif;
+    */
+    box-sizing: border-box;
+}
+a {
+    color: orange;
 }
 p {
     text-align: justify;
@@ -77,27 +88,44 @@ p {
 
 
 #ecran {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
+    position: fixed;
+    z-index: 1;
 }
 
-#mots {
-    margin: 1em;
+#box-nuage {
+    width: 90vw;
+    max-width: 70em;
+    height: 45vw;
+    max-height: 35em;
 }
-.mot {
+#mots {
     /*
-    transition-duration: 1s, 1s;
-    transition-timing-function: linear, linear;
+    width: 90vw;
+    max-width: 60em;
+    height: 45vw;
+    max-height: 30em;
+    transform: scale(100%);
+    width: 720px;
+    height: 360px;
+    margin: auto;
     */
+    width: 100%;
+    height: 100%;
+}
+.mot, .aiguille {
+}
+.mot, #mot_ouvert {
+    /*
     transition-property: top, left;
     transition-duration: 1s, 0.2s;
     transition-delay: 0s, 0.2s;
+    transition-timing-function: linear, linear;
+    */
 }
-#ecran > .mot {
+#mot_ouvert {
+    /*
+    z-index: 1;
+    */
 }
 
 #articles {
@@ -109,9 +137,7 @@ p {
     */
 }
 .article {
-    display: none;
-    padding: 2em;
+    position: relative;
     opacity: 0;
-    transition: display 0s, opacity 0.1s;
 }
 

@@ -29,6 +29,19 @@ github_username: poesiepuzzle
 # Build settings
 #theme: minima
 #theme: agency-jekyll-theme
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter_opts:
+    default_lang: html
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      #line_numbers: true
+      #start_line: 1
+
 plugins:
   - jekyll-feed
 

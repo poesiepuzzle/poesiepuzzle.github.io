@@ -1,55 +1,68 @@
 ---
 layout: default
 ---
-<div class="main">
+<script src="{{ '/assets/js/puzzle.js' | relative_url }}"></script>
+<div id="ecran"></div>
+<link rel="stylesheet" href="{{ '/assets/css/puzzle.css' | relative_url }}">
 
-  <a href="/">
-    <h1 class="title">{{ page.title | escape }}</h1>
-  </a>
-
-  <div id="ecran"></div>
-
+<div id="banner">
   <div class="content">
+    <a href="/">
+      <h1 class="title">{{ page.title | escape }}</h1>
+    </a>
+
     {{ page.content | markdownify }}
   </div>
+</div>
 
-  {%- if site.posts.size > 0 -%}
+
+{%- if site.posts.size > 0 -%}
+  <div id="nav">
 
     <!-- Post cloud -->
 
     <style>
-    .nuage {
-        width: 50%;
-        height: 190px;
-        background-repeat: no-repeat;
-    }
-    .nuage.gauche {
-        float: left;
-        shape-outside: url(/images/nuage_gauche.svg);
-        clip-path: url(/images/nuage_gauche.svg);
-     }
-    .nuage.droit {
-        float: right;
-        shape-outside: url(/images/nuage_droit.svg);
-        clip-path: url(/images/nuage_droit.svg);
-     }
+      .nuage {
+          width: 50%;
+          height: 100%;
+          background-repeat: no-repeat;
+          background-size: contain;
+          background-position: center;
+      }
+      .nuage.gauche {
+          float: left;
+          shape-outside: url(/images/nuage_gauche.svg);
+          clip-path: url(/images/nuage_gauche.svg);
+       }
+      .nuage.droit {
+          float: right;
+          shape-outside: url(/images/nuage_droit.svg);
+          clip-path: url(/images/nuage_droit.svg);
+       }
     </style>
 
-    <div id="mots">
-      <span class="nuage gauche"></span>
-      <span class="nuage droit"></span>
-      {%- for post in site.posts -%}
-        {% assign wc = post.content.size | divided_by: 100 %}
-        {% assign postid = post.url | split: '/' | last | split: '.' | first %}
-        <a    id="mot-{{ postid }}"
-              href="#{{ postid }}"
-              class="mot wordcount-{{ wc }}"
-              onclick="toggle(this)">
-          {{ post.title | escape }}
-        </a>
-      {%- endfor -%}
-    </div>
+    <svg id="box-nuage" viewBox="0 0 720 360" preserveAspectRatio="none" >
+      <path d="M0,0 H720 V360 H0 Z" fill="transparent" stroke="transparent" />
+      <foreignObject x="0" y="0" width="720" height="360">
+        <body xmlns="http://www.w3.org/1999/xhtml">
+          <div id="mots">
+            <span class="nuage gauche"></span>
+            <span class="nuage droit"></span>
+            {%- for post in site.posts -%}
+              {% assign wc = post.content.size | divided_by: 100 %}
+              {% assign postid = post.url | split: '/' | last | split: '.' | first %}
+              <a    id="mot-{{ postid }}"
+                    href="#{{ postid }}"
+                    class="mot wordcount-{{ wc }}"
+                    onclick="toggle(this)">{{ post.title | escape }}</a>
+            {%- endfor -%}
+          </div>
+        </body>
+      </foreignObject>
+    </svg>
+  </div>
 
+  <main>
     <!-- Posts contents -->
 
     <div id="articles">
@@ -63,5 +76,5 @@ layout: default
     </div>
 
   {%- endif -%}
-</div>
+</main>
 

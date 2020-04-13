@@ -96,4 +96,5 @@ Remarque : Le lien sur lequel vous avez cliqué n'arrive pas jusqu'à la fin de 
 ## Pour aller plus loin
 
 [lire le SVG](https://css-tricks.com/svg-path-syntax-illustrated-guide/)
+[les détails sur cette solution](https://skeate.github.io/2015/07/13/Wrapping-Text-to-Fit-Shaped-Containers-with-CSS.html)
 
