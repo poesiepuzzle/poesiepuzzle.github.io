@@ -296,7 +296,7 @@ function montrer(mot) {
 
     aiguille.style.fontSize = String(initialFontSize) + "px";
 
-    mot.style.position = "fixed";
+    mot.style.position = "relative";
     mot.style.left = String(initialLeft) + "px";
     mot.style.top = String(initialTop) + "px";
 

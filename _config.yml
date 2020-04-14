@@ -26,6 +26,13 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://poesiepuzzle.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: poesiepuzzle
 
+defaults:
+    -
+      scope:
+          path: "images"
+      values:
+          image: true
+
 # Build settings
 #theme: minima
 #theme: agency-jekyll-theme
@@ -36,14 +43,14 @@ kramdown:
   syntax_highlighter_opts:
     default_lang: html
     css_class: 'highlight'
-    span:
-      line_numbers: false
-    block:
-      #line_numbers: true
-      #start_line: 1
+#    span:
+#      line_numbers: false
+#    block:
+#      line_numbers: true
+#      start_line: 1
 
-plugins:
-  - jekyll-feed
+#plugins:
+#  - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default.
@@ -64,10 +71,3 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-defaults:
-    -
-      scope:
-          path: "images"
-      values:
-          image: true
-
