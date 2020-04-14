@@ -8,6 +8,16 @@ body {
     height: 100vh;
     */
     margin: 0;
+    font-family: 'Computer Modern Serif', serif;
+    font-size-adjust: .5;
+}
+code {
+    font-family: 'Terminus', monospace;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant', 'Times New Roman', serif;
+    font-weight: bold;
+    font-size-adjust: .5;
 }
 #banner {
     display: flex;
@@ -27,13 +37,13 @@ main {
 
 
 * {
-    /*
-    font-family: Tahoma, Geneva, sans-serif;
-    */
     box-sizing: border-box;
 }
 a {
     color: orange;
+    /*
+    font-family: 'Cormorant', 'Times New Roman', serif;
+    */
 }
 p {
     text-align: justify;
@@ -88,7 +98,7 @@ p {
 
 
 #ecran {
-    position: fixed;
+    position: absolute;
     z-index: 1;
 }
 
@@ -112,7 +122,10 @@ p {
     width: 100%;
     height: 100%;
 }
-.mot, .aiguille {
+.aiguille {
+    /*
+    font-family: 'Cormorant', 'Times New Roman', serif;
+    */
 }
 .mot, #mot_ouvert {
     /*
