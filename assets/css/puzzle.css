@@ -43,7 +43,10 @@ a {
     color: orange;
     /*
     font-family: 'Cormorant', 'Times New Roman', serif;
+    text-decoration: none;
+    border-bottom: 1px solid orange;
     */
+    text-decoration-thickness: 2px;
 }
 p {
     text-align: justify;
