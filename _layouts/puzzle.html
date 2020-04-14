@@ -1,11 +1,11 @@
 ---
 layout: default
 ---
-<script src="{{ 'assets/js/puzzle.js' }}"></script>
-<link rel="stylesheet" href="{{ 'assets/css/puzzle.css' }}" />
-<link rel="stylesheet" href="{{ 'assets/css/fonts.css' }}" />
+<script src="{{ '/assets/js/puzzle.js' | relative_url }}"></script>
+<link rel="stylesheet" href="{{ '/assets/css/fonts.css' | relative_url }}" />
 
 <div id="ecran"></div>
+<link rel="stylesheet" href="{{ '/assets/css/puzzle.css' | relative_url }}">
 
 <div id="banner">
   <div class="content">
@@ -16,6 +16,7 @@ layout: default
     {{ page.content | markdownify }}
   </div>
 </div>
+
 
 {%- if site.posts.size > 0 -%}
   <div id="nav">
@@ -76,6 +77,6 @@ layout: default
       {%- endfor -%}
     </div>
 
-  </main>
-{%- endif -%}
+  {%- endif -%}
+</main>
 
