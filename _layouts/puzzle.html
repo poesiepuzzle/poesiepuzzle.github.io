@@ -1,22 +1,83 @@
 ---
 layout: default
 ---
+
 <script src="{{ '/assets/js/puzzle.js' | relative_url }}"></script>
+<script>
+  window.onpopstate = function popStateLoadPost() {
+    let id;
+    let href = document.URL;
+
+    if(event.state) { id = event.state.id; }
+    else            { id = document.URL; }
+    loadPost(id, href);
+  };
+
+  function clickLoadPost() {
+    let href = event.target.href;
+    let id = event.target.id;
+    let stateObj = { "id": id };
+
+    event.preventDefault();
+    loadPost(id, href);
+    history.pushState(stateObj, href, href);
+  }
+
+  function loadPost(id, href) {
+    callAjax(href, function displayPost(responseText) {
+      let targetDiv = document.querySelector('.ajaxTarget');
+      let bufferDiv = document.createElement('div');
+
+      bufferDiv.innerHTML = responseText.trim();
+      bufferDiv.childNodes.forEach(function (el) {
+        if(
+          el.nodeName != undefined &&
+          el.nodeName != 'META' &&
+          el.nodeName != 'LINK' &&
+          el.nodeName != '#text'
+        ) {
+          let source = el.querySelector('.ajaxTarget');
+
+          console.log("displaying", source);
+          targetDiv.innerHTML = "";
+          targetDiv.appendChild(source);
+        }
+      });
+    });
+  }
+
+  function callAjax(url, callback){
+    // Found at https://stackoverflow.com/a/18324384/11305897
+    var xmlhttp;
+    // compatible with IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+      // The state will toggle on many times at each piece arriving.
+      // readyState 4 is DONE.
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+        callback(xmlhttp.responseText);
+      }
+    }
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+  }
+</script>
+
+<link rel="stylesheet" href="{{ '/assets/css/puzzle.css' | relative_url }}" />
 <link rel="stylesheet" href="{{ '/assets/css/fonts.css' | relative_url }}" />
 
 <div id="ecran"></div>
-<link rel="stylesheet" href="{{ '/assets/css/puzzle.css' | relative_url }}">
 
 <div id="banner">
   <div class="content">
     <a href="/">
-      <h1 class="title">{{ page.title | escape }}</h1>
+      <h1 class="title">{{ site.title | escape }}</h1>
     </a>
 
-    {{ page.content | markdownify }}
+    {{ site.description }}
+
   </div>
 </div>
-
 
 {%- if site.posts.size > 0 -%}
   <div id="nav">
@@ -54,9 +115,9 @@ layout: default
               {% assign wc = post.content.size | divided_by: 100 %}
               {% assign postid = post.url | split: '/' | last | split: '.' | first %}
               <a    id="mot-{{ postid }}"
-                    href="#{{ postid }}"
+                    href="{{ post.url }}"
                     class="mot wordcount-{{ wc }}"
-                    onclick="toggle(this)">{{ post.title | escape }}</a>
+                    onclick="clickLoadPost()">{{ post.title | escape }}</a>
             {%- endfor -%}
           </div>
         </body>
@@ -64,19 +125,9 @@ layout: default
     </svg>
   </div>
 
-  <main>
-    <!-- Posts contents -->
+  <main class="ajaxTarget">
+    {{ content | markdownify }}
+  </main>
 
-    <div id="articles">
-      {%- for post in site.posts -%}
-        {% assign postid = post.url | split: '/' | last | split: '.' | first %}
-
-        <div class="article" id="article-{{ postid }}">
-          {{ post.content }}
-        </div>
-      {%- endfor -%}
-    </div>
-
-  {%- endif -%}
-</main>
+{%- endif -%}
 
