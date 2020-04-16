@@ -3,131 +3,200 @@ layout: default
 ---
 
 <script src="{{ '/assets/js/puzzle.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/ajax.js' | relative_url }}"></script>
 <script>
-  window.onpopstate = function popStateLoadPost() {
-    let id;
-    let href = document.URL;
+  var facteur_mots = 0;
+  var facteur_nuage = 0;
 
-    if(event.state) { id = event.state.id; }
-    else            { id = document.URL; }
-    loadPost(id, href);
+  function maskNuage() {
+    let mots = document.getElementById("mots");
+    let a = document.createElement("a");
+    let d = document.createElement("div");
+
+    a.id = "nuageMask";
+    a.href = '/';
+    a.onclick = clickLoadPost;
+    //a.addEventListener("click", clickLoadPost);
+    d.style.position = "absolute";
+    d.style.left = "0";
+    d.style.top = "0";
+    d.style.width = "100%";
+    d.style.height = "100%";
+    a.appendChild(d);
+    mots.insertAdjacentElement("afterend", a);
+    console.log("nuage masqué");
+  }
+  function unmaskNuage() {
+    let a = document.getElementById('nuageMask');
+
+    if(a) { a.parentElement.removeChild(a); }
+    console.log("nuage démasqué");
+  }
+  function updateNuage(hash) {
+    let nuage = document.getElementById("nuage");
+    let banner = document.getElementById("banner");
+
+    if(hash == '/') {
+      if(! nuage.classList.contains('expanded')) {
+        unmaskNuage();
+        nuage.classList.add('expanded');
+      }
+    } else {
+      maskNuage();
+      if(nuage.classList.contains('expanded')) {
+        nuage.classList.remove('expanded');
+      }
+    }
+  }
+  function updateAjax(request) {
+    let target = document.querySelector(".ajaxTarget");
+
+    if(target.classList.contains("ajaxLoaded")) {
+
+      target.classList.remove("ajaxLoaded");
+      console.log("loaded");
+    } else if(target.classList.contains("ajaxLoading")) {
+      console.log("still loadin ...");
+      request.addEventListener("load", function postLoad() {
+
+        request.removeEventListener("load", postLoad);
+        target.classList.remove("ajaxLoaded");
+        console.log("finally loaded");
+      });
+    } else {
+      console.log("! not loadin at all !");
+    }
+  }
+
+  window.onpopstate = function popStateLoadPost() {
+    let hash;
+    let href = document.URL;
+    let nuage = document.getElementById("nuage");
+
+    if(event.state) { hash = event.state.hash; }
+    else            { hash = href.replace(/http:\/\/([^\/])*/, ""); }
+    updateNuage(hash);
+    request = loadPost(href);
+    updateAjax(request);
+  };
+  window.onload = function prepareNuage() {
+    var nuage = document.getElementById("nuage");
+    var mots = document.getElementById("mots");
+    var liste_mots = document.getElementsByClassName("mot");
+    //var longueur_mots = mots.innerText.length;
+    var longueur_mots = mots.textContent.replace(/\s+/g, ' ').trim().length;
+    let box_style = window.getComputedStyle(nuage);
+    let hash = document.baseURI.replace(/http:\/\/([^\/])*/, "");
+
+    // Quand longueur_mots vaut 123, nuage doit faire environ 720px de large.
+    //facteur_mots = Number(longueur_mots/18).toPrecision(2);
+    facteur_mots = Number(50/longueur_mots).toPrecision(2);
+
+    // Les choses sont facteur_nuage fois plus grandes dans le svg.
+    facteur_nuage = Number(box_style.width.replace(/px$/, "")) / nuage.viewBox.animVal['width'];
+
+    console.log("facteur nuage : " + facteur_nuage);
+    console.log("facteur mots : " + facteur_mots);
+
+    for(var i = 0; i < liste_mots.length; i++) {
+      let mot = liste_mots[i];
+      let style_mot = window.getComputedStyle(mot);
+
+      // Auggmenter la taille des mots pour remplir le nuage.
+      mot.style.fontSize = style_mot.fontSize.replace(/px$/, '') * facteur_mots + "px";
+    }
+    updateNuage(hash);
+    console.log('hash', hash);
   };
 
   function clickLoadPost() {
-    let href = event.target.href;
-    let id = event.target.id;
-    let stateObj = { "id": id };
+    console.log("event from", event.target.tagName);
+    // DEBUG pourquoi event.target pointe tantot sur le lien d'origine,
+    // tantot sur le div qui le contenait ?
+    //let href = event.target.href;
+    let href = event.target.href || event.target.parentElement.href;
+    //let id = event.target.id;
+    let nuage = document.getElementById("nuage");
+    let hash = href.replace(/http:\/\/([^\/])*/, "");
+    let stateObj = { hash: hash };
 
     event.preventDefault();
-    loadPost(id, href);
-    history.pushState(stateObj, href, href);
-  }
 
-  function loadPost(id, href) {
-    callAjax(href, function displayPost(responseText) {
-      let targetDiv = document.querySelector('.ajaxTarget');
-      let bufferDiv = document.createElement('div');
+    request = loadPost(href);
 
-      bufferDiv.innerHTML = responseText.trim();
-      bufferDiv.childNodes.forEach(function (el) {
-        if(
-          el.nodeName != undefined &&
-          el.nodeName != 'META' &&
-          el.nodeName != 'LINK' &&
-          el.nodeName != '#text'
-        ) {
-          let source = el.querySelector('.ajaxTarget');
+    updateNuage(hash);
 
-          console.log("displaying", source);
-          targetDiv.innerHTML = "";
-          targetDiv.appendChild(source);
-        }
-      });
+    // Quand la transition est finie, attendre que la page soit chargée pour
+    // vider les classes de chargement.
+    planWhenDone(nuage, function() {
+      updateAjax(request);
+      history.pushState(stateObj, href, href);
     });
   }
 
-  function callAjax(url, callback){
-    // Found at https://stackoverflow.com/a/18324384/11305897
-    var xmlhttp;
-    // compatible with IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function(){
-      // The state will toggle on many times at each piece arriving.
-      // readyState 4 is DONE.
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-        callback(xmlhttp.responseText);
-      }
-    }
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-  }
 </script>
 
 <link rel="stylesheet" href="{{ '/assets/css/puzzle.css' | relative_url }}" />
+<link rel="stylesheet" href="{{ '/assets/css/ajax.css' | relative_url }}" />
 <link rel="stylesheet" href="{{ '/assets/css/fonts.css' | relative_url }}" />
 
 <div id="ecran"></div>
 
 <div id="banner">
   <div class="content">
-    <a href="/">
       <h1 class="title">{{ site.title | escape }}</h1>
-    </a>
 
     {{ site.description }}
 
   </div>
+
+  {%- if site.posts.size > 0 -%}
+
+  <!-- Post cloud -->
+
+  <style>
+    .mouleNuage {
+        width: 50%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+    }
+    .mouleNuage.gauche {
+        float: left;
+        shape-outside: url("{{ '/images/nuage_gauche.svg' | relative_url }}");
+        clip-path: url("{{ '/images/nuage_gauche.svg' | relative_url }}");
+     }
+    .mouleNuage.droit {
+        float: right;
+        shape-outside: url("{{ '/images/nuage_droit.svg' | relative_url }}");
+        clip-path: url("{{ '/images/nuage_droit.svg' | relative_url }}");
+     }
+  </style>
+
+  <svg id="nuage" viewBox="0 0 720 360">
+    <path d="M0,0 H720 V360 H0 Z" fill="transparent" stroke="transparent" />
+    <foreignObject x="0" y="0" width="720" height="360">
+      <body xmlns="http://www.w3.org/1999/xhtml">
+        <div id="mots">
+          <span class="mouleNuage gauche"></span>
+          <span class="mouleNuage droit"></span>
+          {%- for post in site.posts -%}
+            {% assign wc = post.content.size | divided_by: 100 %}
+            {% assign postid = post.url | split: '/' | last | split: '.' | first %}
+            <a    id="mot-{{ postid }}"
+                  href="{{ post.url | relative_url }}"
+                  class="mot wordcount-{{ wc }}"
+                  onclick="clickLoadPost(this)">{{ post.title | escape }}</a>
+          {%- endfor -%}
+        </div>
+      </body>
+    </foreignObject>
+  </svg>
+  {%- endif -%}
 </div>
 
-{%- if site.posts.size > 0 -%}
-  <div id="nav">
-
-    <!-- Post cloud -->
-
-    <style>
-      .nuage {
-          width: 50%;
-          height: 100%;
-          background-repeat: no-repeat;
-          background-size: contain;
-          background-position: center;
-      }
-      .nuage.gauche {
-          float: left;
-          shape-outside: url(/images/nuage_gauche.svg);
-          clip-path: url(/images/nuage_gauche.svg);
-       }
-      .nuage.droit {
-          float: right;
-          shape-outside: url(/images/nuage_droit.svg);
-          clip-path: url(/images/nuage_droit.svg);
-       }
-    </style>
-
-    <svg id="box-nuage" viewBox="0 0 720 360" preserveAspectRatio="none" >
-      <path d="M0,0 H720 V360 H0 Z" fill="transparent" stroke="transparent" />
-      <foreignObject x="0" y="0" width="720" height="360">
-        <body xmlns="http://www.w3.org/1999/xhtml">
-          <div id="mots">
-            <span class="nuage gauche"></span>
-            <span class="nuage droit"></span>
-            {%- for post in site.posts -%}
-              {% assign wc = post.content.size | divided_by: 100 %}
-              {% assign postid = post.url | split: '/' | last | split: '.' | first %}
-              <a    id="mot-{{ postid }}"
-                    href="{{ post.url }}"
-                    class="mot wordcount-{{ wc }}"
-                    onclick="clickLoadPost()">{{ post.title | escape }}</a>
-            {%- endfor -%}
-          </div>
-        </body>
-      </foreignObject>
-    </svg>
-  </div>
-
-  <main class="ajaxTarget">
-    {{ content | markdownify }}
-  </main>
-
-{%- endif -%}
+<main class="ajaxTarget">
+  {{ content | markdownify }}
+</main>
 

@@ -2,4 +2,5 @@
 
 folder=$(echo $0 | sed 's#/\([^/]*\)$##')
 cd $folder
-bundle exec jekyll serve
+RUBYOPT=-W0 bundle exec jekyll serve -H $(hostname)
+
