@@ -2,10 +2,16 @@ function ajaxRequest(url, callback){
     var request = new XMLHttpRequest();
     //request.onload = function(){
     request.onreadystatechange = function(){
-        // readyState 4 is DONE.
-        // status 200 is received (?)
-        if (request.readyState == 4 && request.status == 200){
-            callback(request.responseText);
+        try {
+            if (request.readyState == XMLHttpRequest.DONE) {
+                if(request.status == 200) {
+                    callback(request.responseText);
+                } else {
+                    console.log("request failed, status", request.status);
+                }
+            }
+        } catch(error) {
+            console.log("! exception caught : " + e.description);
         }
     }
     request.open("GET", url, true);
