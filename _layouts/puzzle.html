@@ -36,7 +36,8 @@ layout: default
     let nuage = document.getElementById("nuage");
     let banner = document.getElementById("banner");
 
-    if(hash == '/') {
+    if(hash.replace(/\/$/, '') == '{{ site.url }}{{ site.baseurl }}' ||
+          hash.replace(/\/$/, '') == '{{ site.baseurl }}') {
       if(! nuage.classList.contains('expanded')) {
         unmaskNuage();
         nuage.classList.add('expanded');
@@ -52,15 +53,15 @@ layout: default
     let target = document.querySelector(".ajaxTarget");
 
     if(target.classList.contains("ajaxLoaded")) {
-
       target.classList.remove("ajaxLoaded");
+      document.body.classList.add("showTime");
       console.log("loaded");
     } else if(target.classList.contains("ajaxLoading")) {
       console.log("still loadin ...");
       request.addEventListener("load", function postLoad() {
-
         request.removeEventListener("load", postLoad);
         target.classList.remove("ajaxLoaded");
+        document.body.classList.add("showTime");
         console.log("finally loaded");
       });
     } else {
@@ -121,6 +122,9 @@ layout: default
     let stateObj = { hash: hash };
 
     event.preventDefault();
+    if(document.body.classList.contains("showTime")) {
+      document.body.classList.remove("showTime");
+    }
 
     request = loadPost(href);
 
