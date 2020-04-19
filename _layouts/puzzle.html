@@ -36,8 +36,7 @@ layout: default
     let nuage = document.getElementById("nuage");
     let banner = document.getElementById("banner");
 
-    if(hash.replace(/\/$/, '') == '{{ site.url }}{{ site.baseurl }}' ||
-          hash.replace(/\/$/, '') == '{{ site.baseurl }}') {
+    if(hash == '{{ site.baseurl }}/' || hash == '/') {
       if(! nuage.classList.contains('expanded')) {
         unmaskNuage();
         nuage.classList.add('expanded');
@@ -75,11 +74,12 @@ layout: default
     let nuage = document.getElementById("nuage");
 
     if(event.state) { hash = event.state.hash; }
-    else            { hash = href.replace(/http:\/\/([^\/])*/, ""); }
+    else            { hash = href.replace(/http(s)?:\/\/([^\/])*/, ""); }
     updateNuage(hash);
     request = loadPost(href);
     updateAjax(request);
   };
+
   window.onload = function prepareNuage() {
     var nuage = document.getElementById("nuage");
     var mots = document.getElementById("mots");
@@ -87,7 +87,7 @@ layout: default
     //var longueur_mots = mots.innerText.length;
     var longueur_mots = mots.textContent.replace(/\s+/g, ' ').trim().length;
     let box_style = window.getComputedStyle(nuage);
-    let hash = document.baseURI.replace(/http:\/\/([^\/])*/, "");
+    let hash = document.baseURI.replace(/http(s)?:\/\/([^\/])*/, "");
 
     // Quand longueur_mots vaut 123, nuage doit faire environ 720px de large.
     //facteur_mots = Number(longueur_mots/18).toPrecision(2);
@@ -118,7 +118,7 @@ layout: default
     let href = event.target.href || event.target.parentElement.href;
     //let id = event.target.id;
     let nuage = document.getElementById("nuage");
-    let hash = href.replace(/http:\/\/([^\/])*/, "");
+    let hash = href.replace(/http(s)?:\/\/([^\/])*/, "");
     let stateObj = { hash: hash };
 
     event.preventDefault();
