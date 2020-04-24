@@ -2,11 +2,30 @@
 layout: default
 ---
 
-<script src="{{ '/assets/js/puzzle.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/ajax.js' | relative_url }}"></script>
 <script>
   var facteur_mots = 0;
   var facteur_nuage = 0;
+
+  function planWhenDone(transitionable, func) {
+    function wrapper(arg) {
+      transitionable.removeEventListener('transitionend', wrapper);
+      func(arg);
+    }
+    transitionable.addEventListener('transitionend', wrapper);
+
+    //setTimeout(20);
+    style = transitionable.currentStyle || window.getComputedStyle(transitionable);
+    if(style.transitionProperty == "" || style.transitionDuration == "0s" || style.transitionDuration == "0s 0s") {
+        console.log(transitionable.id + " fires straight away, calling " + func.name);
+        var endEvent = document.createEvent("HTMLEvents");
+        endEvent.eventName = "transitionend";
+        endEvent.initEvent("transitionend", true, true);
+        transitionable.dispatchEvent(endEvent);
+    } else {
+        console.log(transitionable.id + " in transition, " + func.name + " programmed");
+    }
+  }
 
   function maskNuage() {
     let mots = document.getElementById("mots");
@@ -108,6 +127,10 @@ layout: default
     }
     updateNuage(hash);
     console.log('hash', hash);
+    // Enclencher les animations si cacher_nuage ne l'a pas fait :
+    if(hash != "/") {
+      document.body.classList.add("showTime");
+    }
   };
 
   function clickLoadPost() {
