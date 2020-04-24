@@ -128,7 +128,7 @@ layout: default
     updateNuage(hash);
     console.log('hash', hash);
     // Enclencher les animations si cacher_nuage ne l'a pas fait :
-    if(hash != "/") {
+    if(hash != '{{ site.baseurl }}/' && hash != '/') {
       document.body.classList.add("showTime");
     }
   };
