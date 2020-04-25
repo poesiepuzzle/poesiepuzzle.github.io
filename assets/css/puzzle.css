@@ -9,7 +9,6 @@ body {
     */
     margin: 0;
     font-family: 'Computer Modern Serif', serif;
-    font-size-adjust: .5;
 }
 code {
     font-family: 'Terminus', monospace;
@@ -45,6 +44,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .mot a {
     text-decoration: none;
+    font-family: 'Computer Modern Serif', serif;
 }
 main {
     max-width: 35em;
@@ -57,8 +57,8 @@ main {
 }
 a {
     color: orangered;
-    font-family: 'Cormorant', 'Times New Roman', serif;
     /*
+    font-family: 'Cormorant', 'Times New Roman', serif;
     text-decoration: none;
     border-bottom: 1px solid orangered;
     text-decoration-thickness: 2px;

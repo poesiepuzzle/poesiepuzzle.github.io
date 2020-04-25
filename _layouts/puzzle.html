@@ -42,6 +42,7 @@ layout: default
           }
         }
     );
+    console.log(listeMots);
     // On applique WordCount sur un div dans le DOM, puis on le transfère dans un
     // SVG dont on peut modifier les dimensions.
 
@@ -192,7 +193,7 @@ layout: default
     <!-- Post cloud -->
     <div id="mots" style="width: 800px; height: 400px;">
       {%- for post in site.posts -%}
-        {% assign wc = post.content.size | divided_by: 100 %}
+        {% assign wc = post.content.size | divided_by: 100 | plus: 1 %}
         {% assign postid = post.url | split: '/' | last | split: '.' | first %}
         <a    id="mot-{{ postid }}"
               href="{{ post.url | relative_url }}"
