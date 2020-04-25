@@ -3,6 +3,7 @@ layout: default
 ---
 
 <script src="{{ '/assets/js/ajax.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/wordcloud2.js' | relative_url }}"></script>
 <script>
   var facteur_mots = 0;
   var facteur_nuage = 0;
@@ -27,13 +28,56 @@ layout: default
     }
   }
 
+
+  window.onload = function prepareNuage() {
+    var nuagePlaceHolder = document.getElementById("nuagePlaceHolder");
+    var divMots = document.getElementById("mots");
+    document.body.appendChild(divMots);
+    var listeMots = Array.prototype.map.call(divMots.querySelectorAll('a'),
+        function(link) {
+          return {
+            word: link.textContent,
+            weight: link.dataset['wordcount'],
+            attributes: { href: link.href, onclick: "clickLoadPost(this)" }
+          }
+        }
+    );
+    // On applique WordCount sur un div dans le DOM, puis on le transfère dans un
+    // SVG dont on peut modifier les dimensions.
+
+    WordCloud("mots", {
+      list: listeMots,
+      shape: nuage,
+      //shape: "star",
+      weightFactor: 2,
+      classes: "mot",
+      color: null
+    });
+    nuagePlaceHolder.appendChild(divMots);
+
+    hash = document.URL.replace(/http(s)?:\/\/([^\/])*/, "").replace(/\/$/, '');
+    updateNuage(hash);
+    console.log('hash', hash);
+    // Enclencher les animations si cacher_nuage ne l'a pas fait :
+    if(hash != '{{ site.baseurl }}/' && hash != '/') {
+      document.body.classList.add("showTime");
+    }
+  };
+
+  function nuage(theta) {
+    var max = 591;
+    var leng = [452,437,424,424,425,425,425,426,426,426,426,426,426,426,426,426,426,426,425,425,425,424,424,424,423,422,422,421,420,419,418,416,416,415,413,413,411,410,409,407,406,404,403,401,400,398,396,394,392,390,388,387,384,382,381,378,376,372,370,368,366,363,361,358,356,353,350,348,345,343,339,337,335,332,329,326,323,320,317,313,310,307,305,302,299,295,292,289,286,283,279,276,272,269,266,263,260,255,252,248,245,243,239,235,231,228,224,224,226,227,228,229,231,232,234,235,236,237,238,239,241,242,244,245,246,247,248,250,251,252,254,255,257,258,259,261,262,264,265,266,268,269,271,272,274,275,276,278,279,280,282,283,284,286,288,289,290,292,293,294,294,297,298,299,300,301,304,304,305,307,308,309,311,311,313,315,315,317,317,319,320,321,322,323,324,326,327,328,329,330,331,332,334,334,335,336,338,338,340,340,342,343,344,345,346,347,348,349,350,351,352,353,354,356,356,357,358,359,360,361,361,362,363,364,364,366,366,367,367,368,369,369,370,370,371,371,371,372,373,372,373,373,374,373,374,374,374,374,375,375,375,375,375,376,374,375,375,375,375,375,375,374,375,375,375,374,374,374,374,374,373,373,373,373,373,373,372,372,372,371,372,371,372,370,370,370,370,370,370,369,369,368,369,369,369,383,395,406,416,425,435,443,453,459,467,474,480,488,493,500,505,510,515,519,524,528,532,535,538,541,544,547,549,552,554,556,557,559,561,563,565,566,566,568,569,570,571,571,573,573,575,575,576,576,576,577,578,577,577,577,577,577,576,576,576,575,574,572,572,571,569,568,566,563,562,559,557,554,551,548,545,542,538,535,530,526,522,518,513,509,505,500,494,489,483,479,474,468,463,458,453,448,444,439,435,431,427,423,419,415,412,408,405,402,398,395,392,389,386,384,381,378,376,373,371,368,366,364,362,360,357,355,354,352,350,348,346,345,343,342,340,339,337,336,334,333,332,331,330,328,327,326,325,324,323,323,322,321,320,319,319,318,317,317,316,316,315,315,314,314,313,313,313,313,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,312,313,313,313,314,314,314,315,315,316,316,317,318,318,319,320,321,321,322,323,324,325,326,327,328,329,330,331,333,334,335,337,338,339,341,342,344,346,347,349,351,353,355,357,359,361,363,365,367,370,372,374,377,380,382,385,388,391,394,397,400,403,407,410,414,417,421,425,429,433,437,442,446,451,456,461,466,471,476,482,488,494,500,506,513,520,527,532,540,546,550,555,560,564,568,571,574,577,579,582,583,585,586,587,589,589,590,591,590,591,591,590,590,590,589,588,587,586,585,584,582,582,580,578,576,574,572,571,568,566,563,560,558,555,551,548,543,540,535,530,525,520,515,509,501,494,486,477,468,456];
+
+    return leng[(theta / (2 * Math.PI)) * leng.length | 0] / max;
+  }
+
   function maskNuage() {
     let mots = document.getElementById("mots");
     let a = document.createElement("a");
     let d = document.createElement("div");
 
     a.id = "nuageMask";
-    a.href = '/';
+    a.href = '{{ site.baseurl }}';
     a.onclick = clickLoadPost;
     //a.addEventListener("click", clickLoadPost);
     d.style.position = "absolute";
@@ -55,7 +99,7 @@ layout: default
     let nuage = document.getElementById("nuage");
     let banner = document.getElementById("banner");
 
-    if(hash == '{{ site.baseurl }}/' || hash == '/') {
+    if(hash == '{{ site.baseurl }}' || hash == '/') {
       if(! nuage.classList.contains('expanded')) {
         unmaskNuage();
         nuage.classList.add('expanded');
@@ -93,48 +137,10 @@ layout: default
     let nuage = document.getElementById("nuage");
 
     if(event.state) { hash = event.state.hash; }
-    else            { hash = href.replace(/http(s)?:\/\/([^\/])*/, ""); }
+    else            { hash = href.replace(/http(s)?:\/\/([^\/])*/, "").replace(/\/$/, ''); }
     updateNuage(hash);
     request = loadPost(href);
     updateAjax(request);
-  };
-
-  window.onload = function prepareNuage() {
-    var nuage = document.getElementById("nuage");
-    var mots = document.getElementById("mots");
-    var liste_mots = document.getElementsByClassName("mot");
-    //var longueur_mots = mots.innerText.length;
-    var longueur_mots = mots.textContent.replace(/\s+/g, ' ').trim().length;
-    let box_style = window.getComputedStyle(nuage);
-    let hash = document.baseURI.replace(/http(s)?:\/\/([^\/])*/, "");
-
-    // Facteur maximum: 2.625
-    // Facteur minimum : 0.75 - au-dessus de 300 caractères ça devrait saturer.
-    // Facteur 1 pour ~ 240 mots
-    if(longueur_mots < 32) { longueur_mots = 32; }
-    facteur_mots = Number(60/longueur_mots + 0.6).toPrecision(2);
-    if(longueur_mots > 300) { facteur_mots = 70/longueur_mots; }
-
-    // Les choses sont facteur_nuage fois plus grandes dans le svg.
-    facteur_nuage = Number(box_style.width.replace(/px$/, "")) / nuage.viewBox.animVal['width'];
-
-    console.log("facteur nuage : " + facteur_nuage);
-    console.log("facteur mots : " + facteur_mots);
-    console.log(longueur_mots);
-
-    for(var i = 0; i < liste_mots.length; i++) {
-      let mot = liste_mots[i];
-      let style_mot = window.getComputedStyle(mot);
-
-      // Auggmenter la taille des mots pour remplir le nuage.
-      mot.style.fontSize = style_mot.fontSize.replace(/px$/, '') * facteur_mots + "px";
-    }
-    updateNuage(hash);
-    console.log('hash', hash);
-    // Enclencher les animations si cacher_nuage ne l'a pas fait :
-    if(hash != '{{ site.baseurl }}/' && hash != '/') {
-      document.body.classList.add("showTime");
-    }
   };
 
   function clickLoadPost() {
@@ -145,7 +151,7 @@ layout: default
     let href = event.target.href || event.target.parentElement.href;
     //let id = event.target.id;
     let nuage = document.getElementById("nuage");
-    let hash = href.replace(/http(s)?:\/\/([^\/])*/, "");
+    let hash = href.replace(/http(s)?:\/\/([^\/])*/, "").replace(/\/$/, '');
     let stateObj = { hash: hash };
 
     event.preventDefault();
@@ -183,56 +189,30 @@ layout: default
 
   {%- if site.posts.size > 0 -%}
 
-  <!-- Post cloud -->
+    <!-- Post cloud -->
+    <div id="mots" style="width: 800px; height: 400px;">
+      {%- for post in site.posts -%}
+        {% assign wc = post.content.size | divided_by: 100 %}
+        {% assign postid = post.url | split: '/' | last | split: '.' | first %}
+        <a    id="mot-{{ postid }}"
+              href="{{ post.url | relative_url }}"
+              class="mot"
+              data-wordcount="{{ wc }}"
+              onclick="clickLoadPost(this)">{{ post.title | escape }}</a>
+      {%- endfor -%}
+    </div>
 
-  <style>
-    .mouleNuage {
-        width: 50%;
-        height: 100%;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        position: relative;
-        z-index: -1;
-    }
-    .mouleNuage.gauche {
-        float: left;
-        shape-outside: url("{{ '/images/nuage_gauche.svg' | relative_url }}");
-        clip-path: url("{{ '/images/nuage_gauche.svg' | relative_url }}");
-     }
-    .mouleNuage.droit {
-        float: right;
-        shape-outside: url("{{ '/images/nuage_droit.svg' | relative_url }}");
-        clip-path: url("{{ '/images/nuage_droit.svg' | relative_url }}");
-     }
-  </style>
+    <div id="nuage" style="max-width: 100vw; max-height: 80vh;">
+      <svg viewBox="0 0 800 400" width="100%" height="100%">
+        <path d="M0,0 H800 V400 H0 Z" fill="transparent" stroke="transparent" />
+        <foreignObject x="0" y="0" width="800" height="400">
+          <div id="nuagePlaceHolder"></div>
+        </foreignObject>
+      </svg>
+    </div>
 
-  <svg id="nuage" viewBox="0 0 720 360">
-    <path d="M0,0 H720 V360 H0 Z" fill="transparent" stroke="transparent" />
-    <foreignObject x="0" y="0" width="720" height="360">
-      <body xmlns="http://www.w3.org/1999/xhtml">
-        <div id="mots">
-          <span class="mouleNuage gauche"></span>
-          <span class="mouleNuage droit"></span>
-          {%- for post in site.posts -%}
-            {% assign wc = post.content.size | times: 1.0 %}
-            {% assign wi = 10 %}
-            {% if wc > 50 %} {% assign wi = 15 %} {%- endif -%}
-            {% if wc > 100 %} {% assign wi = 20 %} {%- endif -%}
-            {% if wc > 500 %} {% assign wi = 25 %} {%- endif -%}
-            {% if wc > 1000 %} {% assign wi = 30 %} {%- endif -%}
-            {% assign postid = post.url | split: '/' | last | split: '.' | first %}
-            <a    id="mot-{{ postid }}"
-                  href="{{ post.url | relative_url }}"
-                  class="mot"
-                  style="font-size: {{ wi }}px"
-                  onclick="clickLoadPost(this)">{{ post.title | escape }}</a>
-          {%- endfor -%}
-        </div>
-      </body>
-    </foreignObject>
-  </svg>
   {%- endif -%}
+
 </div>
 
 <main class="ajaxTarget">
