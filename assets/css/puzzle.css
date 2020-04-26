@@ -28,13 +28,13 @@ h1, h2, h3, h4, h5, h6 {
     margin: 1em;
 }
 #nuage {
-    height: 10em;
-    text-align: center;
+    width: 10em;
+    height: 5em;
     transition: 1s;
 }
 #nuage.expanded {
     height: 80vh;
-    max-width: 100vw;
+    width: 100vw;
 }
 #mots {
     background-color: transparent !important;
