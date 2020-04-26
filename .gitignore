@@ -1,8 +1,9 @@
+programme
 _site
+_drafts
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
 vendor
 .DS_Store
-programme
 
