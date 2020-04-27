@@ -108,15 +108,19 @@ layout: default
     let box_style = window.getComputedStyle(nuage);
     let hash = document.baseURI.replace(/http(s)?:\/\/([^\/])*/, "");
 
-    // Quand longueur_mots vaut 123, nuage doit faire environ 720px de large.
-    //facteur_mots = Number(longueur_mots/18).toPrecision(2);
-    facteur_mots = Number(50/longueur_mots).toPrecision(2);
+    // Facteur maximum: 2.625
+    // Facteur minimum : 0.75 - au-dessus de 300 caractères ça devrait saturer.
+    // Facteur 1 pour ~ 240 mots
+    if(longueur_mots < 32) { longueur_mots = 32; }
+    facteur_mots = Number(60/longueur_mots + 0.7).toPrecision(2);
+    if(longueur_mots > 300) { facteur_mots = 70/longueur_mots; }
 
     // Les choses sont facteur_nuage fois plus grandes dans le svg.
     facteur_nuage = Number(box_style.width.replace(/px$/, "")) / nuage.viewBox.animVal['width'];
 
     console.log("facteur nuage : " + facteur_nuage);
     console.log("facteur mots : " + facteur_mots);
+    console.log(longueur_mots);
 
     for(var i = 0; i < liste_mots.length; i++) {
       let mot = liste_mots[i];
@@ -211,11 +215,17 @@ layout: default
           <span class="mouleNuage gauche"></span>
           <span class="mouleNuage droit"></span>
           {%- for post in site.posts -%}
-            {% assign wc = post.content.size | divided_by: 100 %}
+            {% assign wc = post.content.size | times: 1.0 %}
+            {% assign wi = 10 %}
+            {% if wc > 50 %} {% assign wi = 15 %} {%- endif -%}
+            {% if wc > 100 %} {% assign wi = 20 %} {%- endif -%}
+            {% if wc > 500 %} {% assign wi = 25 %} {%- endif -%}
+            {% if wc > 1000 %} {% assign wi = 30 %} {%- endif -%}
             {% assign postid = post.url | split: '/' | last | split: '.' | first %}
             <a    id="mot-{{ postid }}"
                   href="{{ post.url | relative_url }}"
-                  class="mot wordcount-{{ wc }}"
+                  class="mot"
+                  style="font-size: {{ wi }}px"
                   onclick="clickLoadPost(this)">{{ post.title | escape }}</a>
           {%- endfor -%}
         </div>
