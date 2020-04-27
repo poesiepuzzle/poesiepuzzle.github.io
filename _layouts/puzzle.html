@@ -112,7 +112,7 @@ layout: default
     // Facteur minimum : 0.75 - au-dessus de 300 caractères ça devrait saturer.
     // Facteur 1 pour ~ 240 mots
     if(longueur_mots < 32) { longueur_mots = 32; }
-    facteur_mots = Number(60/longueur_mots + 0.7).toPrecision(2);
+    facteur_mots = Number(60/longueur_mots + 0.6).toPrecision(2);
     if(longueur_mots > 300) { facteur_mots = 70/longueur_mots; }
 
     // Les choses sont facteur_nuage fois plus grandes dans le svg.
